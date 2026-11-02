@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sahal Kunnatteyil | Cybersecurity, Network Forensics & Log Analysis</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        cyber: {
+                            emerald: '#10b981',
+                            cyan: '#06b6d4',
+                            dark: '#090d16',
+                            card: '#111827',
+                            border: '#1f2937'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Grid Background & Subtle Glows */
+        body {
+            background-color: #090d16;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+        .bg-grid-pattern {
+            background-size: 32px 32px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        }
+        .glow-emerald {
+            box-shadow: 0 0 25px -5px rgba(16, 185, 129, 0.25);
+        }
+        .glow-cyan {
+            box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.25);
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #090d16;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #374151;
+        }
+    </style>
+</head>
+<body class="bg-grid-pattern antialiased selection:bg-emerald-500/30 selection:text-emerald-300 relative">
+
+    <!-- Ambient Top Gradient Glow -->
+    <div class="pointer-events-none fixed top-0 left-1/2 -translate-x-1/2 w-[750px] h-[320px] bg-gradient-to-tr from-emerald-500/10 via-cyan-500/10 to-transparent blur-3xl -z-10"></div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- ================= STICKY NAVIGATION BAR ================= -->
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-[#090d16]/85 border-b border-slate-800/80 transition-all">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Brand / Terminal Logo -->
+            <a href="#" class="flex items-center gap-2.5 group focus:outline-none">
+                <div class="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-mono font-bold text-sm group-hover:bg-emerald-500 group-hover:text-slate-950 transition-all">
+                    SK_
+                </div>
+                <div class="flex flex-col">
+                    <span class="editable-name font-bold tracking-tight text-slate-100 text-sm sm:text-base leading-none">Sahal Kunnatteyil</span>
+                    <span class="font-mono text-[11px] text-emerald-400/90 mt-0.5">cybersec // net_forensics</span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-300">
+                <a href="#projects" class="hover:text-emerald-400 transition-colors">Projects</a>
+                <a href="#skills" class="hover:text-emerald-400 transition-colors">Skills</a>
+                <a href="#education" class="hover:text-emerald-400 transition-colors">Education & Training</a>
+                <a href="#contact" class="hover:text-emerald-400 transition-colors">Contact</a>
+                <button onclick="openEditDrawer()" class="text-xs font-mono text-cyan-400 hover:text-cyan-300 flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-cyan-500/10 border border-cyan-500/20 transition-all">
+                    <i data-lucide="sliders-horizontal" class="w-3.5 h-3.5"></i>
+                    <span>Edit Details</span>
+                </button>
+            </nav>
+
+            <!-- Action CTAs (LinkedIn & Custom CV PDF) -->
+            <div class="flex items-center gap-2.5">
+                <a id="nav-linkedin-link" href="https://www.linkedin.com/in/sahal-kunnatteyil-66b0a7247" target="_blank" rel="noopener noreferrer" 
+                   class="dynamic-linkedin inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[#0A66C2]/15 hover:bg-[#0A66C2]/30 text-[#3897f0] border border-[#0A66C2]/40 text-xs sm:text-sm font-medium transition-all"
+                   title="Connect on LinkedIn">
+                    <i data-lucide="linkedin" class="w-4 h-4"></i>
+                    <span class="hidden sm:inline">LinkedIn</span>
+                </a>
+                
+                <button onclick="openCVModal()" 
+                        class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs sm:text-sm transition-all shadow-lg shadow-emerald-500/10">
+                    <i data-lucide="file-text" class="w-4 h-4"></i>
+                    <span>My CV (PDF)</span>
+                </button>
+
+                <!-- Mobile Hamburger Button -->
+                <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden p-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/60 focus:outline-none">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden bg-slate-900/95 border-b border-slate-800 px-4 pt-2 pb-4 space-y-2 text-sm">
+            <a href="#projects" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded-lg hover:bg-slate-800 text-slate-200">Featured Projects</a>
+            <a href="#skills" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded-lg hover:bg-slate-800 text-slate-200">Technical Skills</a>
+            <a href="#education" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded-lg hover:bg-slate-800 text-slate-200">Education & Training</a>
+            <a href="#contact" onclick="toggleMobileMenu()" class="block py-2 px-3 rounded-lg hover:bg-slate-800 text-slate-200">Contact</a>
+            <button onclick="toggleMobileMenu(); openEditDrawer();" class="w-full text-left py-2 px-3 rounded-lg bg-cyan-500/10 text-cyan-400 font-mono text-xs flex items-center gap-2">
+                <i data-lucide="sliders-horizontal" class="w-4 h-4"></i> Edit Profile & Export HTML
+            </button>
+        </div>
+    </header>
+
+    <!-- ================= MAIN CONTAINER ================= -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-16 pb-24 space-y-24">
+
+        <!-- ================= HERO SECTION ================= -->
+        <section id="about" class="relative">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                
+                <!-- Left Column: Intro & CTAs -->
+                <div class="lg:col-span-7 space-y-6">
+                    <!-- Status Pill -->
+                    <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-slate-800 text-xs font-mono text-slate-300">
+                        <span class="relative flex h-2 w-2">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                        </span>
+                        <span id="hero-location-badge">Warsaw, Poland • B.Eng. Computer Engineering (Feb 2027)</span>
+                    </div>
+
+                    <!-- Headline -->
+                    <div class="space-y-2">
+                        <h1 class="editable-name text-3xl sm:text-5xl font-extrabold tracking-tight text-white leading-tight">
+                            Sahal Kunnatteyil
+                        </h1>
+                        <p id="hero-headline" class="text-lg sm:text-xl font-medium text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 font-mono">
+                            Computer Engineering Student | Cybersecurity, Network Forensics & Log Analysis
+                        </p>
+                    </div>
+
+                    <!-- Bio Description (Learner-focused, Strictly Cybersecurity & Forensics) -->
+                    <p id="hero-bio" class="text-slate-300 text-base sm:text-lg leading-relaxed max-w-2xl">
+                        Hands-on Computer Engineering student dedicated to continuously building practical skills in <span class="text-white font-medium">network security</span>, <span class="text-white font-medium">packet forensics</span>, and <span class="text-white font-medium">SIEM log investigation</span>. Passionate about dissecting network traffic, investigating security events in home and cloud lab environments, and applying structured incident triage workflows to real-world defensive security challenges.
+                    </p>
+
+                    <!-- Primary Action Buttons -->
+                    <div class="flex flex-wrap items-center gap-3 pt-2">
+                        <button onclick="openCVModal()" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-sm transition-all glow-emerald">
+                            <i data-lucide="file-text" class="w-4 h-4"></i>
+                            <span>View / Download My CV</span>
+                        </button>
+
+                        <a href="#projects" class="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-800/90 hover:bg-slate-700/90 text-white border border-slate-700 font-medium text-sm transition-all">
+                            <i data-lucide="terminal" class="w-4 h-4 text-emerald-400"></i>
+                            <span>Explore Security Projects</span>
+                        </a>
+
+                        <a id="hero-linkedin-link" href="https://www.linkedin.com/in/sahal-kunnatteyil-66b0a7247" target="_blank" rel="noopener noreferrer" 
+                           class="dynamic-linkedin inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800 hover:border-slate-700 font-medium text-sm transition-all">
+                            <i data-lucide="linkedin" class="w-4 h-4 text-[#3897f0]"></i>
+                            <span>LinkedIn</span>
+                        </a>
+
+                        <a id="hero-github-link" href="https://github.com/sahalkunnatteyil" target="_blank" rel="noopener noreferrer" 
+                           class="dynamic-github inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-800 hover:border-slate-700 font-medium text-sm transition-all">
+                            <i data-lucide="github" class="w-4 h-4"></i>
+                            <span>GitHub</span>
+                        </a>
+                    </div>
+
+                    <!-- Quick Highlights Strip -->
+                    <div class="pt-4 grid grid-cols-3 gap-4 border-t border-slate-800/80 text-xs sm:text-sm">
+                        <div>
+                            <div class="font-mono text-emerald-400 font-bold">Packet Forensics</div>
+                            <div class="text-slate-400">Scapy, Wireshark & PCAP</div>
+                        </div>
+                        <div>
+                            <div class="font-mono text-cyan-400 font-bold">SOC & Log Triage</div>
+                            <div class="text-slate-400">SIEM Queries & Event Logs</div>
+                        </div>
+                        <div>
+                            <div class="font-mono text-emerald-400 font-bold">Threat Telemetry</div>
+                            <div class="text-slate-400">IOC Enrichment & SQLite</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Interactive Security Telemetry Terminal Card -->
+                <div class="lg:col-span-5">
+                    <div class="rounded-2xl bg-[#0d131f] border border-slate-800/90 shadow-2xl overflow-hidden">
+                        <!-- Terminal Window Bar -->
+                        <div class="bg-slate-900/90 px-4 py-3 border-b border-slate-800 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="w-3 h-3 rounded-full bg-rose-500/80"></span>
+                                <span class="w-3 h-3 rounded-full bg-amber-500/80"></span>
+                                <span class="w-3 h-3 rounded-full bg-emerald-500/80"></span>
+                            </div>
+                            <span class="font-mono text-xs text-slate-400">sahal@warsaw-sec-lab: ~/profile</span>
+                            <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">zsh</span>
+                        </div>
+                        <!-- Terminal Content -->
+                        <div class="p-5 font-mono text-xs sm:text-[13px] space-y-3 leading-relaxed text-slate-300">
+                            <div>
+                                <span class="text-emerald-400">sahal@sec-lab</span>:<span class="text-cyan-400">~</span>$ ./verify_profile.sh
+                            </div>
+                            <div class="text-slate-400 pl-2 border-l-2 border-slate-800 space-y-1">
+                                <div><span class="text-slate-500">[INFO]</span> Loading academic & security lab profile...</div>
+                                <div><span class="text-emerald-400">[OK]</span> B.Eng: <span class="text-white">Computer Engineering (Vistula, Feb 2027)</span></div>
+                                <div><span class="text-emerald-400">[OK]</span> Diploma: <span class="text-white">Computer Engineering (SSM Polytechnic)</span></div>
+                                <div><span class="text-emerald-400">[OK]</span> Labs: <span class="text-cyan-300">TryHackMe SOC L1</span> | <span class="text-cyan-300">Google Cybersec</span></div>
+                                <div><span class="text-emerald-400">[OK]</span> Focus: <span class="text-amber-300">Packet Analysis, SIEM Triage, Threat Intel</span></div>
+                            </div>
+                            <div class="pt-1">
+                                <span class="text-emerald-400">sahal@sec-lab</span>:<span class="text-cyan-400">~</span>$ cat mindset.txt
+                            </div>
+                            <div class="bg-slate-900/80 p-3 rounded-lg border border-slate-800/90 text-slate-300">
+                                "Committed to continuous hands-on learning in defensive security—analyzing raw packet captures, correlating endpoint and firewall logs, and sharpening practical SOC investigation skills."
+                            </div>
+                            <div class="flex items-center gap-2 pt-1">
+                                <span class="text-emerald-400">sahal@sec-lab</span>:<span class="text-cyan-400">~</span>$ <span class="w-2 h-4 bg-emerald-400 inline-block animate-pulse"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= FEATURED PROJECTS SECTION (ONLY THE 2 AUTHENTIC PROJECTS) ================= -->
+        <section id="projects" class="space-y-8 scroll-mt-20">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-800 pb-5">
+                <div>
+                    <div class="inline-flex items-center gap-2 text-emerald-400 font-mono text-xs uppercase tracking-wider mb-1">
+                        <i data-lucide="shield-alert" class="w-4 h-4"></i> Hands-On Security Portfolio
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white">Featured Cybersecurity & Forensics Projects</h2>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-400 font-mono">
+                    Practical network forensics & incident triage workflows
+                </p>
+            </div>
+
+            <!-- Projects Grid -->
+            <div class="grid grid-cols-1 gap-8">
+
+                <!-- PROJECT 1: pcap-analyzer -->
+                <article class="rounded-2xl bg-slate-900/60 border border-slate-800/90 hover:border-emerald-500/40 transition-all overflow-hidden shadow-xl">
+                    <div class="p-6 sm:p-8 space-y-6">
+                        <div class="flex flex-wrap items-start justify-between gap-4">
+                            <div class="space-y-1.5">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="px-2.5 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-xs font-semibold">
+                                        Network Forensics & Threat Intel
+                                    </span>
+                                    <span class="text-xs font-mono text-slate-400">Packet Capture Pipeline</span>
+                                </div>
+                                <h3 class="text-xl sm:text-2xl font-bold text-white">
+                                    pcap-analyzer — Network Forensics & Threat Telemetry Pipeline
+                                </h3>
+                            </div>
+
+                            <!-- Project Interactive Actions -->
+                            <div class="flex items-center gap-2">
+                                <button onclick="togglePreview('pcap-terminal')" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 text-emerald-300 border border-emerald-500/30 text-xs font-mono font-medium transition-all">
+                                    <i data-lucide="terminal" class="w-4 h-4"></i>
+                                    <span>Inspect CLI Output</span>
+                                </button>
+                                <a href="https://github.com/sahalkunnatteyil" target="_blank" rel="noopener noreferrer" class="dynamic-github inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition-all">
+                                    <i data-lucide="github" class="w-4 h-4"></i>
+                                    <span>Repository</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                            Built a Python-based network forensics pipeline using <span class="text-white font-medium">Scapy</span>, <span class="text-white font-medium">SQLite</span>, and the <span class="text-white font-medium">VirusTotal REST API</span> to parse raw packet capture (<code class="text-emerald-300 font-mono">.pcap</code>) files, extract behavioral network indicators, store structured forensic artifacts locally, and enrich suspicious external endpoints with threat intelligence telemetry.
+                        </p>
+
+                        <!-- Architecture & Key Contributions -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-1">
+                            <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80">
+                                <div class="text-emerald-400 font-mono text-xs font-semibold mb-1.5 flex items-center gap-1.5">
+                                    <i data-lucide="network" class="w-4 h-4"></i> 1. Packet Artifact Extraction
+                                </div>
+                                <p class="text-xs text-slate-400 leading-relaxed">
+                                    Parses `.pcap` captures with Scapy to extract source/destination IP conversations, protocol distributions, port activity, and DNS/HTTP flow metadata.
+                                </p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80">
+                                <div class="text-cyan-400 font-mono text-xs font-semibold mb-1.5 flex items-center gap-1.5">
+                                    <i data-lucide="database" class="w-4 h-4"></i> 2. SQLite Storage & Caching
+                                </div>
+                                <p class="text-xs text-slate-400 leading-relaxed">
+                                    Stores parsed session artifacts and resolved IP reputation results in a local SQLite database to avoid duplicate lookups and respect API rate quotas.
+                                </p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80">
+                                <div class="text-emerald-400 font-mono text-xs font-semibold mb-1.5 flex items-center gap-1.5">
+                                    <i data-lucide="shield-check" class="w-4 h-4"></i> 3. VirusTotal Enrichment
+                                </div>
+                                <p class="text-xs text-slate-400 leading-relaxed">
+                                    Queries external public IPs against the VirusTotal v3 REST API and outputs structured forensic summaries highlighting flagged connections.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Expandable CLI Output for pcap-analyzer -->
+                        <div id="pcap-terminal" class="hidden pt-2 transition-all">
+                            <div class="rounded-xl bg-[#070b12] border border-emerald-500/30 overflow-hidden font-mono text-xs">
+                                <div class="bg-slate-900 px-4 py-2.5 border-b border-slate-800 flex items-center justify-between text-slate-400">
+                                    <span class="flex items-center gap-2"><i data-lucide="terminal" class="w-3.5 h-3.5 text-emerald-400"></i> Sample Pipeline Execution — pcap-analyzer</span>
+                                    <button onclick="togglePreview('pcap-terminal')" class="text-slate-400 hover:text-white flex items-center gap-1">
+                                        <span>Close</span>
+                                    </button>
+                                </div>
+                                <div class="p-4 space-y-2 text-slate-300 overflow-x-auto">
+                                    <div><span class="text-emerald-400">$</span> python3 pcap_analyzer.py --file lab_traffic_capture.pcap --db artifacts.sqlite --vt-enrich</div>
+                                    <div class="text-slate-400">[+] Reading packet capture: lab_traffic_capture.pcap (12,480 packets)...</div>
+                                    <div class="text-slate-400">[+] Protocol Breakdown: TCP (76.2%) | UDP (20.4%) | ICMP (3.4%)</div>
+                                    <div class="text-slate-400">[+] Logged 34 unique external IPv4 endpoints & 16 DNS queries to SQLite table `network_flows`.</div>
+                                    <div class="text-cyan-400">[CACHE] 31 IPs found in local SQLite cache. Querying 3 uncached IPs via VirusTotal API...</div>
+                                    <div class="p-3 rounded-lg bg-rose-950/40 border border-rose-500/40 text-rose-200 space-y-1">
+                                        <div class="font-bold text-rose-400">[!] SUSPICIOUS ENDPOINT FLAGGED: 185.220.101.45:443</div>
+                                        <div>    ├── VirusTotal Detections : 14 / 92 Security Vendors Flagged (Malicious / Tor Exit & C2)</div>
+                                        <div>    ├── Internal Source Host  : 192.168.10.24:51390 -> 185.220.101.45:443 (TCP SYN/ACK)</div>
+                                        <div>    └── Correlated DNS Query  : cdn-telemetry-sync[.]net</div>
+                                    </div>
+                                    <div class="text-emerald-400">[✓] Analysis complete. Summary saved to ./output/forensic_report.json</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tech Stack Tags -->
+                        <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-800/80">
+                            <span class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-200 font-mono text-xs">Python</span>
+                            <span class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-200 font-mono text-xs">Scapy</span>
+                            <span class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-200 font-mono text-xs">SQLite</span>
+                            <span class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-200 font-mono text-xs">VirusTotal REST API</span>
+                            <span class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-200 font-mono text-xs">PCAP Forensics</span>
+                            <span class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-200 font-mono text-xs">Threat Telemetry</span>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- PROJECT 2: SIEM Log Investigation & Incident Triage Lab -->
+                <article class="rounded-2xl bg-slate-900/60 border border-slate-800/90 hover:border-cyan-500/40 transition-all overflow-hidden shadow-xl">
+                    <div class="p-6 sm:p-8 space-y-6">
+                        <div class="flex flex-wrap items-start justify-between gap-4">
+                            <div class="space-y-1.5">
+                                <div class="flex items-center gap-2.5">
+                                    <span class="px-2.5 py-0.5 rounded-md bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 font-mono text-xs font-semibold">
+                                        SOC & Log Analysis
+                                    </span>
+                                    <span class="text-xs font-mono text-slate-400">Defensive Security Lab</span>
+                                </div>
+                                <h3 class="text-xl sm:text-2xl font-bold text-white">
+                                    SIEM Log Investigation & Incident Triage Lab
+                                </h3>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                <button onclick="togglePreview('siem-case-study')" class="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-300 border border-cyan-500/30 text-xs font-mono font-medium transition-all">
+                                    <i data-lucide="search-code" class="w-4 h-4"></i>
+                                    <span>View Sample Triage Queries</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                            Hands-on security log analysis and incident triage investigating authentication anomalies, brute-force patterns, lateral movement indicators, and firewall/EDR event correlation using SIEM search queries and structured triage workflows.
+                        </p>
+
+                        <!-- Key Highlights -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-1">
+                            <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80">
+                                <div class="text-cyan-400 font-mono text-xs font-semibold mb-1.5 flex items-center gap-1.5">
+                                    <i data-lucide="key-round" class="w-4 h-4"></i> Authentication & Brute-Force
+                                </div>
+                                <p class="text-xs text-slate-400 leading-relaxed">
+                                    Analyzed Windows Security Event Logs (Event IDs 4625/4624) and Linux `auth.log` to identify credential stuffing and brute-force login bursts.
+                                </p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80">
+                                <div class="text-emerald-400 font-mono text-xs font-semibold mb-1.5 flex items-center gap-1.5">
+                                    <i data-lucide="git-compare" class="w-4 h-4"></i> Firewall & EDR Correlation
+                                </div>
+                                <p class="text-xs text-slate-400 leading-relaxed">
+                                    Correlated Sysmon process creation events (Event ID 1) and network connections (Event ID 3) with perimeter firewall logs to trace post-compromise activity.
+                                </p>
+                            </div>
+                            <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80">
+                                <div class="text-cyan-400 font-mono text-xs font-semibold mb-1.5 flex items-center gap-1.5">
+                                    <i data-lucide="clipboard-check" class="w-4 h-4"></i> Structured Incident Triage
+                                </div>
+                                <p class="text-xs text-slate-400 leading-relaxed">
+                                    Documented attack timelines, extracted host and network IOCs, mapped behaviors to MITRE ATT&CK, and formulated containment steps.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Interactive Expandable Case Study Preview -->
+                        <div id="siem-case-study" class="hidden pt-2 transition-all">
+                            <div class="rounded-xl bg-[#070b12] border border-cyan-500/30 overflow-hidden font-mono text-xs">
+                                <div class="bg-slate-900 px-4 py-2.5 border-b border-slate-800 flex items-center justify-between text-slate-400">
+                                    <span class="flex items-center gap-2"><i data-lucide="file-search" class="w-3.5 h-3.5 text-cyan-400"></i> Lab Case Study — Brute-Force & Suspicious Process Triage</span>
+                                    <button onclick="togglePreview('siem-case-study')" class="text-slate-400 hover:text-white">
+                                        Close
+                                    </button>
+                                </div>
+                                <div class="p-4 space-y-3 text-slate-300">
+                                    <div class="flex flex-wrap gap-2">
+                                        <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30">Alert: Multiple Failed Logins Followed by Success</span>
+                                        <span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">MITRE: T1110 (Brute Force) &rarr; T1059.001 (PowerShell)</span>
+                                    </div>
+                                    <div class="p-2.5 rounded bg-slate-900 border border-slate-800 text-cyan-300 overflow-x-auto">
+                                        index=sec_events (EventCode=4625 OR EventCode=4624) Host="WKSTN-04" | stats count(eval(EventCode=4625)) as Failed, count(eval(EventCode=4624)) as Success by src_ip, Account_Name
+                                    </div>
+                                    <div><span class="text-slate-400">Investigation Findings:</span> Detected 118 failed logon attempts (Event 4625) from `10.10.45.21` within 2 minutes followed by a successful login (Event 4624).</div>
+                                    <div><span class="text-slate-400">EDR/Sysmon Correlation:</span> Sysmon Event ID 1 showed `powershell.exe -nop -w hidden -enc ...` spawned immediately after authentication, followed by an outbound connection (Event ID 3) to an unfamiliar external IP over port 8443.</div>
+                                    <div><span class="text-emerald-400">Triage Outcome:</span> Escalated as True Positive; documented host isolation, credential reset, and egress IP block.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tech Stack Tags -->
+                        <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-800/80">
+                            <span class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-200 font-mono text-xs">SIEM Search Queries</span>
+                            <span class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-200 font-mono text-xs">Windows Event Logs</span>
+                            <span class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-200 font-mono text-xs">Sysmon & EDR Telemetry</span>
+                            <span class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-200 font-mono text-xs">Linux Auth & Firewall Logs</span>
+                            <span class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-200 font-mono text-xs">MITRE ATT&CK Mapping</span>
+                            <span class="px-2.5 py-1 rounded-md bg-slate-800 text-slate-200 font-mono text-xs">Incident Triage</span>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+
+        <!-- ================= TECHNICAL SKILLS SECTION ================= -->
+        <section id="skills" class="space-y-8 scroll-mt-20">
+            <div class="border-b border-slate-800 pb-5">
+                <div class="inline-flex items-center gap-2 text-emerald-400 font-mono text-xs uppercase tracking-wider mb-1">
+                    <i data-lucide="cpu" class="w-4 h-4"></i> Technical Foundation
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-bold text-white">Security & Engineering Skills</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- Category 1: Network Security & Packet Analysis -->
+                <div class="rounded-2xl bg-slate-900/60 border border-slate-800/90 p-6 space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                            <i data-lucide="network" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white text-base">Network Forensics</h3>
+                            <p class="text-xs text-slate-400 font-mono">Traffic & Protocol Analysis</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 pt-2">
+                        <span class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs font-mono text-emerald-300">Wireshark</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs font-mono text-emerald-300">Scapy (Python)</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs font-mono text-slate-200">PCAP Inspection</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs font-mono text-slate-200">TCP/IP, UDP, ICMP</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs font-mono text-slate-200">DNS & HTTP Flows</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs font-mono text-slate-200">tcpdump</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs font-mono text-slate-200">Network Security Fundamentals</span>
+                    </div>
+                </div>
+
+                <!-- Category 2: SOC, Log Investigation & Threat Intel -->
+                <div class="rounded-2xl bg-slate-900/60 border border-slate-800/90 p-6 space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+                            <i data-lucide="shield-half" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white text-base">SOC & Log Analysis</h3>
+                            <p class="text-xs text-slate-400 font-mono">Detection & Incident Triage</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 pt-2">
+                        <span class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs font-mono text-cyan-300">SIEM Log Investigation</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs font-mono text-slate-200">Alert Triage Workflows</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs font-mono text-slate-200">Sysmon & Windows Event Logs</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs font-mono text-slate-200">Linux Log Analysis</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs font-mono text-slate-200">VirusTotal API Enrichment</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs font-mono text-slate-200">MITRE ATT&CK Basics</span>
+                    </div>
+                </div>
+
+                <!-- Category 3: Scripting, Systems & Environment -->
+                <div class="rounded-2xl bg-slate-900/60 border border-slate-800/90 p-6 space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400">
+                            <i data-lucide="terminal-square" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white text-base">Scripting & Systems</h3>
+                            <p class="text-xs text-slate-400 font-mono">Security Tooling & OS</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap gap-2 pt-2">
+                        <span class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs font-mono text-purple-300">Python (Security Scripting)</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs font-mono text-slate-200">SQLite / SQL Queries</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs font-mono text-slate-200">Linux CLI & Bash</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs font-mono text-slate-200">Git & GitHub</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs font-mono text-slate-200">REST API Integration</span>
+                        <span class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs font-mono text-slate-200">JSON / Log Parsing</span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= EDUCATION & CERTIFICATIONS SECTION ================= -->
+        <section id="education" class="space-y-8 scroll-mt-20">
+            <div class="border-b border-slate-800 pb-5">
+                <div class="inline-flex items-center gap-2 text-emerald-400 font-mono text-xs uppercase tracking-wider mb-1">
+                    <i data-lucide="graduation-cap" class="w-4 h-4"></i> Academic & Training Path
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-bold text-white">Education & Practical Training</h2>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- Left Column: Academic Degrees -->
+                <div class="space-y-4">
+                    <h3 class="text-sm font-mono uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                        <i data-lucide="landmark" class="w-4 h-4 text-emerald-400"></i> Academic Degrees
+                    </h3>
+
+                    <div class="rounded-2xl bg-slate-900/60 border border-slate-800/90 p-6 space-y-6">
+                        <!-- Degree 1 -->
+                        <div class="relative pl-6 border-l-2 border-emerald-500/50 space-y-1.5">
+                            <span class="absolute -left-[7px] top-1.5 w-3 h-3 rounded-full bg-emerald-400 ring-4 ring-emerald-500/20"></span>
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <span class="text-xs font-mono text-emerald-400 font-semibold">Expected Graduation: Feb 2027</span>
+                                <span class="text-xs font-mono text-slate-400">Warsaw, Poland</span>
+                            </div>
+                            <h4 class="text-base sm:text-lg font-bold text-white">Bachelor of Engineering in Computer Engineering</h4>
+                            <p class="text-sm text-slate-300">Akademia Finansów i Biznesu Vistula (Vistula University)</p>
+                            <p class="text-xs text-slate-400 pt-1">
+                                Core coursework in Computer Networks, Operating Systems, Cybersecurity Principles, Database Systems, and Computer Architecture.
+                            </p>
+                        </div>
+
+                        <!-- Degree 2 -->
+                        <div class="relative pl-6 border-l-2 border-slate-700 space-y-1.5">
+                            <span class="absolute -left-[7px] top-1.5 w-3 h-3 rounded-full bg-slate-500"></span>
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <span class="text-xs font-mono text-slate-400">Completed: April 2022</span>
+                                <span class="text-xs font-mono text-slate-400">Tirur, India</span>
+                            </div>
+                            <h4 class="text-base sm:text-lg font-bold text-white">Diploma in Computer Engineering</h4>
+                            <p class="text-sm text-slate-300">SSM Polytechnic College</p>
+                            <p class="text-xs text-slate-400 pt-1">
+                                Built a strong technical foundation in networking fundamentals, system administration, computer hardware, and programming logic.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Column: Certifications & Practical Training -->
+                <div class="space-y-4">
+                    <h3 class="text-sm font-mono uppercase tracking-wider text-slate-400 flex items-center gap-2">
+                        <i data-lucide="award" class="w-4 h-4 text-cyan-400"></i> Security Certifications & Labs
+                    </h3>
+
+                    <div class="space-y-4">
+                        <!-- Cert 1 -->
+                        <div class="rounded-2xl bg-slate-900/60 border border-slate-800/90 p-5 flex items-start gap-4 hover:border-cyan-500/40 transition-all">
+                            <div class="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 shrink-0">
+                                <i data-lucide="shield" class="w-6 h-6"></i>
+                            </div>
+                            <div class="space-y-1 flex-1">
+                                <div class="flex flex-wrap items-center justify-between gap-2">
+                                    <span class="text-xs font-mono text-cyan-400 font-semibold">TryHackMe • Completed June 2026</span>
+                                    <span class="px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 font-mono text-[11px]">Hands-On Blue Team Labs</span>
+                                </div>
+                                <h4 class="text-base font-bold text-white">TryHackMe SOC Level 1 Path</h4>
+                                <p class="text-xs text-slate-400 leading-relaxed">
+                                    Completed practical blue-team lab scenarios focused on SIEM alert triage, network traffic forensics with Wireshark, endpoint log analysis (Sysmon), and cyber defense frameworks.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Cert 2 -->
+                        <div class="rounded-2xl bg-slate-900/60 border border-slate-800/90 p-5 flex items-start gap-4 hover:border-emerald-500/40 transition-all">
+                            <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0">
+                                <i data-lucide="badge-check" class="w-6 h-6"></i>
+                            </div>
+                            <div class="space-y-1 flex-1">
+                                <div class="flex flex-wrap items-center justify-between gap-2">
+                                    <span class="text-xs font-mono text-emerald-400 font-semibold">Coursera • Completed Nov 2025</span>
+                                    <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-mono text-[11px]">Foundational Training</span>
+                                </div>
+                                <h4 class="text-base font-bold text-white">Google Cybersecurity Certificate</h4>
+                                <p class="text-xs text-slate-400 leading-relaxed">
+                                    Developed foundational skills across Linux command-line operations, SQL queries, network security defenses, vulnerability assessment, and Python scripting for security tasks.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ================= CONTACT SECTION (CYBERSECURITY & FORENSICS FOCUS ONLY) ================= -->
+        <section id="contact" class="scroll-mt-20">
+            <div class="rounded-3xl bg-slate-900/70 border border-slate-800 p-8 sm:p-12 text-center space-y-6 max-w-4xl mx-auto">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-mono text-xs">
+                    <i data-lucide="radio" class="w-3.5 h-3.5"></i> Open to Cybersecurity & SOC Learning Opportunities
+                </div>
+                <h2 class="text-2xl sm:text-4xl font-bold text-white">Get In Touch</h2>
+                <p id="contact-description" class="text-slate-300 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
+                    Based in <strong>Warsaw, Poland</strong>. Always eager to connect with cybersecurity professionals, discuss network forensics and log analysis workflows, or explore internship and entry-level opportunities in <strong>Cybersecurity, SOC Operations, and Network Security</strong>.
+                </p>
+
+                <div class="flex flex-wrap items-center justify-center gap-4 pt-2">
+                    <a id="mailto-btn" href="mailto:sahalk242@gmail.com" class="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-sm transition-all glow-emerald">
+                        <i data-lucide="mail" class="w-4 h-4"></i>
+                        <span class="dynamic-email-text">sahalk242@gmail.com</span>
+                    </a>
+
+                    <button onclick="copyEmailAddress()" class="inline-flex items-center gap-2 px-4 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-mono text-xs sm:text-sm transition-all" title="Copy Email Address">
+                        <i data-lucide="copy" class="w-4 h-4 text-emerald-400"></i>
+                        <span>Copy Email</span>
+                    </button>
+
+                    <a id="footer-linkedin-link" href="https://www.linkedin.com/in/sahal-kunnatteyil-66b0a7247" target="_blank" rel="noopener noreferrer" 
+                       class="dynamic-linkedin inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-[#0A66C2] hover:bg-[#0958a8] text-white font-semibold text-sm transition-all">
+                        <i data-lucide="linkedin" class="w-4 h-4"></i>
+                        <span>Connect on LinkedIn</span>
+                    </a>
+
+                    <button onclick="openCVModal()" class="inline-flex items-center gap-2 px-5 py-3.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 font-medium text-sm transition-all">
+                        <i data-lucide="file-text" class="w-4 h-4 text-cyan-400"></i>
+                        <span>My CV (PDF)</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="border-t border-slate-800/80 py-8 text-center text-xs text-slate-500 font-mono">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div>© 2026 <span class="editable-name">Sahal Kunnatteyil</span> • Warsaw, Poland • <span class="dynamic-email-text text-slate-400">sahalk242@gmail.com</span></div>
+            <div class="flex items-center gap-4">
+                <button onclick="openEditDrawer()" class="text-cyan-400 hover:underline">Edit Profile / Export HTML</button>
+                <a href="#about" class="hover:text-emerald-400 transition-colors">Back to Top &uarr;</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ================= CUSTOM CV PDF VIEWER & UPLOADER MODAL (REPLACES GENERATED RESUME) ================= -->
+    <div id="cv-modal" class="fixed inset-0 z-50 hidden bg-slate-950/90 backdrop-blur-md overflow-y-auto p-3 sm:p-6 flex items-center justify-center">
+        <div class="relative w-full max-w-5xl bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[88vh]">
+            
+            <!-- Modal Top Header -->
+            <div class="bg-slate-950 px-5 py-3.5 border-b border-slate-800 flex flex-wrap items-center justify-between gap-3 shrink-0">
+                <div class="flex items-center gap-2.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                    <span class="font-mono text-xs sm:text-sm font-semibold text-white">Sahal Kunnatteyil — Official CV (PDF)</span>
+                    <span id="cv-status-badge" class="px-2 py-0.5 rounded text-[11px] font-mono bg-slate-800 text-slate-300 border border-slate-700">
+                        ./Sahal_Kunnatteyil_CV.pdf
+                    </span>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2">
+                    <!-- Upload Custom PDF Button -->
+                    <label for="cv-file-input" class="cursor-pointer inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-cyan-500/15 hover:bg-cyan-500/25 text-cyan-300 border border-cyan-500/30 text-xs font-mono font-medium transition-all">
+                        <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                        <span>Load My PDF File</span>
+                    </label>
+                    <input id="cv-file-input" type="file" accept="application/pdf" class="hidden" onchange="handleCustomCVUpload(event)">
+
+                    <!-- Direct Download Button -->
+                    <a id="cv-download-btn" href="./Sahal_Kunnatteyil_CV.pdf" download="Sahal_Kunnatteyil_CV.pdf" 
+                       class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs transition-all">
+                        <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                        <span>Download CV</span>
+                    </a>
+
+                    <!-- Open in New Tab -->
+                    <a id="cv-newtab-btn" href="./Sahal_Kunnatteyil_CV.pdf" target="_blank" rel="noopener noreferrer" 
+                       class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs transition-all">
+                        <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                        <span class="hidden sm:inline">New Tab</span>
+                    </a>
+
+                    <!-- Close Modal -->
+                    <button onclick="closeCVModal()" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Modal Body: Either Live PDF Iframe OR Upload Dropzone -->
+            <div class="flex-1 bg-slate-950 relative overflow-hidden flex flex-col">
+                
+                <!-- State 1: Prompt to select their own PDF in preview mode -->
+                <div id="cv-upload-prompt" class="flex-1 flex flex-col items-center justify-center p-6 text-center max-w-xl mx-auto space-y-5">
+                    <div class="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                        <i data-lucide="file-up" class="w-8 h-8"></i>
+                    </div>
+                    <div class="space-y-2">
+                        <h3 class="text-lg sm:text-xl font-bold text-white">Attach Your Own Custom CV (PDF)</h3>
+                        <p class="text-xs sm:text-sm text-slate-400 leading-relaxed">
+                            Instead of a generated template, this viewer displays <strong>your exact PDF resume</strong>. Select your `.pdf` file below to preview it live right now, or place your PDF named <code class="text-emerald-300 font-mono">Sahal_Kunnatteyil_CV.pdf</code> in the same folder as <code class="text-emerald-300 font-mono">index.html</code> when hosting on GitHub Pages.
+                        </p>
+                    </div>
+
+                    <label for="cv-file-input" class="cursor-pointer w-full py-8 px-6 rounded-2xl border-2 border-dashed border-slate-700 hover:border-emerald-400 bg-slate-900/60 hover:bg-slate-900 transition-all flex flex-col items-center gap-2">
+                        <i data-lucide="folder-up" class="w-6 h-6 text-emerald-400"></i>
+                        <span class="text-sm font-semibold text-white">Click to select your CV (.pdf) from your computer</span>
+                        <span class="text-xs text-slate-400 font-mono">Renders your exact custom-made CV inside this window</span>
+                    </label>
+
+                    <div class="w-full p-4 rounded-xl bg-slate-900/90 border border-slate-800 text-left text-xs font-mono text-slate-400 space-y-1">
+                        <div class="text-slate-200 font-semibold">How it works when hosted online (GitHub Pages / Vercel):</div>
+                        <div>1. Save your own CV PDF as <span class="text-emerald-400">Sahal_Kunnatteyil_CV.pdf</span></div>
+                        <div>2. Upload it alongside <span class="text-cyan-400">index.html</span> in your repository</div>
+                        <div>3. Or click <button onclick="showHostedPDFPreview()" class="text-emerald-400 underline hover:text-emerald-300">Preview ./Sahal_Kunnatteyil_CV.pdf path directly</button></div>
+                    </div>
+                </div>
+
+                <!-- State 2: Embedded PDF Viewer Iframe -->
+                <iframe id="cv-pdf-iframe" src="" class="hidden w-full h-full border-0 bg-slate-900" title="Sahal Kunnatteyil CV PDF"></iframe>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ================= EDIT PROFILE & EXPORT HTML DRAWER ================= -->
+    <div id="edit-drawer" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex justify-end">
+        <div class="w-full max-w-md bg-slate-900 border-l border-slate-800 h-full flex flex-col justify-between p-6 overflow-y-auto shadow-2xl">
+            <div class="space-y-6">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-4">
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="sliders-horizontal" class="w-4 h-4 text-cyan-400"></i>
+                        <h3 class="font-bold text-white text-base">Edit Contact & Profile Details</h3>
+                    </div>
+                    <button onclick="closeEditDrawer()" class="p-1.5 rounded-lg bg-slate-800 text-slate-400 hover:text-white">
+                        <i data-lucide="x" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <p class="text-xs text-slate-400 leading-relaxed">
+                    Any changes you make below update the website immediately. Click <strong>"Export Updated index.html"</strong> at the bottom to download a clean copy of this single-file website with your changes permanently saved.
+                </p>
+
+                <div class="space-y-4 text-xs">
+                    <div>
+                        <label class="block text-slate-300 font-mono mb-1">Full Name</label>
+                        <input id="edit-name" type="text" value="Sahal Kunnatteyil" oninput="applyLiveEdits()" 
+                               class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white font-mono focus:outline-none focus:border-emerald-400">
+                    </div>
+
+                    <div>
+                        <label class="block text-slate-300 font-mono mb-1">Email Address</label>
+                        <input id="edit-email" type="email" value="sahalk242@gmail.com" oninput="applyLiveEdits()" 
+                               class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white font-mono focus:outline-none focus:border-emerald-400">
+                    </div>
+
+                    <div>
+                        <label class="block text-slate-300 font-mono mb-1">LinkedIn Profile URL</label>
+                        <input id="edit-linkedin" type="url" value="https://www.linkedin.com/in/sahal-kunnatteyil-66b0a7247" oninput="applyLiveEdits()" 
+                               class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white font-mono focus:outline-none focus:border-emerald-400">
+                    </div>
+
+                    <div>
+                        <label class="block text-slate-300 font-mono mb-1">GitHub Profile URL</label>
+                        <input id="edit-github" type="url" value="https://github.com/sahalkunnatteyil" oninput="applyLiveEdits()" 
+                               class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white font-mono focus:outline-none focus:border-emerald-400">
+                    </div>
+
+                    <div>
+                        <label class="block text-slate-300 font-mono mb-1">CV File Path (for GitHub Pages / Hosting)</label>
+                        <input id="edit-cv-path" type="text" value="./Sahal_Kunnatteyil_CV.pdf" oninput="applyLiveEdits()" 
+                               class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-white font-mono focus:outline-none focus:border-emerald-400">
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-6 border-t border-slate-800 space-y-2.5">
+                <button onclick="exportUpdatedHTML()" class="w-full py-3 px-4 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold text-xs font-mono flex items-center justify-center gap-2 transition-all">
+                    <i data-lucide="download" class="w-4 h-4"></i>
+                    <span>Export Updated index.html</span>
+                </button>
+                <button onclick="closeEditDrawer()" class="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium transition-all">
+                    Done
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= JAVASCRIPT LOGIC ================= -->
+    <script>
+        // Initialize Lucide Icons on load
+        window.addEventListener('DOMContentLoaded', () => {
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+        });
+
+        // Mobile Navigation Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Toggle Expandable Project Terminal / Case Study Previews
+        function togglePreview(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.toggle('hidden');
+            }
+        }
+
+        // Open & Close Custom CV PDF Modal
+        function openCVModal() {
+            document.getElementById('cv-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCVModal() {
+            document.getElementById('cv-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Handle User Uploading Their Own Custom PDF File in the Browser
+        let currentUploadedBlobUrl = null;
+
+        function handleCustomCVUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.type !== 'application/pdf') {
+                showToast('Please select a valid PDF (.pdf) file.');
+                return;
+            }
+
+            if (currentUploadedBlobUrl) {
+                URL.revokeObjectURL(currentUploadedBlobUrl);
+            }
+
+            currentUploadedBlobUrl = URL.createObjectURL(file);
+
+            // Show PDF inside iframe and update download/new-tab buttons
+            const iframe = document.getElementById('cv-pdf-iframe');
+            const prompt = document.getElementById('cv-upload-prompt');
+            const downloadBtn = document.getElementById('cv-download-btn');
+            const newTabBtn = document.getElementById('cv-newtab-btn');
+            const badge = document.getElementById('cv-status-badge');
+
+            iframe.src = currentUploadedBlobUrl;
+            iframe.classList.remove('hidden');
+            prompt.classList.add('hidden');
+
+            downloadBtn.href = currentUploadedBlobUrl;
+            downloadBtn.download = file.name;
+            newTabBtn.href = currentUploadedBlobUrl;
+            badge.textContent = `${file.name} (Loaded)`;
+            badge.className = 'px-2 py-0.5 rounded text-[11px] font-mono bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+
+            showToast(`Loaded your custom CV: ${file.name}`);
+        }
+
+        // Allow previewing the hosted relative path directly
+        function showHostedPDFPreview() {
+            const cvPath = document.getElementById('edit-cv-path').value.trim() || './Sahal_Kunnatteyil_CV.pdf';
+            const iframe = document.getElementById('cv-pdf-iframe');
+            const prompt = document.getElementById('cv-upload-prompt');
+            iframe.src = cvPath;
+            iframe.classList.remove('hidden');
+            prompt.classList.add('hidden');
+        }
+
+        // Open & Close Profile Editor Drawer
+        function openEditDrawer() {
+            document.getElementById('edit-drawer').classList.remove('hidden');
+        }
+
+        function closeEditDrawer() {
+            document.getElementById('edit-drawer').classList.add('hidden');
+        }
+
+        // Live-update Name, Email, LinkedIn, GitHub, and CV Path across the page
+        function applyLiveEdits() {
+            const name = document.getElementById('edit-name').value.trim() || 'Sahal Kunnatteyil';
+            const email = document.getElementById('edit-email').value.trim() || 'sahalk242@gmail.com';
+            const linkedin = document.getElementById('edit-linkedin').value.trim();
+            const github = document.getElementById('edit-github').value.trim();
+            const cvPath = document.getElementById('edit-cv-path').value.trim() || './Sahal_Kunnatteyil_CV.pdf';
+
+            // Update Name
+            document.querySelectorAll('.editable-name').forEach(el => {
+                el.textContent = name;
+            });
+
+            // Update Email Text & mailto href
+            document.querySelectorAll('.dynamic-email-text').forEach(el => {
+                el.textContent = email;
+            });
+            const mailtoBtn = document.getElementById('mailto-btn');
+            if (mailtoBtn) mailtoBtn.href = `mailto:${email}`;
+
+            // Update LinkedIn Links
+            document.querySelectorAll('.dynamic-linkedin').forEach(el => {
+                el.href = linkedin;
+            });
+
+            // Update GitHub Links
+            document.querySelectorAll('.dynamic-github').forEach(el => {
+                el.href = github;
+            });
+
+            // Update Default CV Path (if no custom blob is loaded)
+            if (!currentUploadedBlobUrl) {
+                document.getElementById('cv-download-btn').href = cvPath;
+                document.getElementById('cv-newtab-btn').href = cvPath;
+                document.getElementById('cv-status-badge').textContent = cvPath;
+            }
+        }
+
+        // Export Updated Single-File HTML
+        function exportUpdatedHTML() {
+            closeEditDrawer();
+            const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'index.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('Downloaded updated index.html!');
+        }
+
+        // Copy Email Helper (Fallback-safe)
+        function copyEmailAddress() {
+            const email = document.getElementById('edit-email').value.trim() || 'sahalk242@gmail.com';
+            const textarea = document.createElement('textarea');
+            textarea.value = email;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast(`Copied ${email} to clipboard!`);
+            } catch (err) {
+                showToast('Failed to copy email.');
+            }
+            document.body.removeChild(textarea);
+        }
+
+        // Close modals on Escape key
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeCVModal();
+                closeEditDrawer();
+            }
+        });
+
+        // Toast Notification UI
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'px-4 py-3 rounded-xl bg-slate-900 border border-emerald-500/50 text-emerald-300 font-mono text-xs shadow-2xl flex items-center gap-2.5 transition-all duration-300';
+            toast.innerHTML = `<span>✓</span><span>${message}</span>`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, 2800);
+        }
+    </script>
+</body>
+</html>
